@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "strict": true,
+    "strictPropertyInitialization": false,
+
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["src/*"],
+      "@/generated/*": ["src/generated/*"],
+      "@/core/*": ["src/core/*"],
+      "@modules/*": ["src/modules/*"]
+    },
+
+    "target": "ES2023",
+    "outDir": "./dist",
+    "sourceMap": true,
+    "incremental": true
+  }
+}
