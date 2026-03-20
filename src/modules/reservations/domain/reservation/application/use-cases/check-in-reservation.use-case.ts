@@ -37,7 +37,6 @@ export class CheckInReservationUseCase {
     try {
       await this.reservations.update(reservation);
     } catch (error) {
-      // TODO: Log error
       return left(new ReservationError());
     }
 

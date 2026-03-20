@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 
 import { randomUUID } from 'crypto';
 
@@ -8,6 +8,7 @@ import { SlotNotAvailableError } from './errors/slot-not-available.error';
 import { Either, left, right } from '@/core/either/either';
 import { Reservation } from '../../enterprise/entities/reservation.entities';
 import { ReservationNotCreatedError } from './errors/reservation-not-created.error';
+import { Logger, LOGGER } from '../logger/logger';
 
 type Response = Either<
   SlotNotAvailableError | ReservationNotCreatedError,
@@ -16,10 +17,18 @@ type Response = Either<
 
 @Injectable()
 export class CreateReservationUseCase {
-  constructor(private reservations: ReservationRepository) {}
+  constructor(
+    private reservations: ReservationRepository,
+    @Inject(LOGGER) private logger: Logger,
+  ) {}
 
   async execute(data: CreateReservationInput): Promise<Response> {
     const { passengerId, slotId } = data;
+
+    if (!passengerId || !slotId) {
+      return left(new ReservationNotCreatedError());
+    }
+
     const date = new Date();
 
     const existingReservation =
@@ -43,7 +52,10 @@ export class CreateReservationUseCase {
     try {
       await this.reservations.create(reservation);
     } catch (error) {
-      // TODO: Log error
+      this.logger.error(
+        `Failed to create reservation data=${JSON.stringify(reservation)}`,
+        String(error),
+      );
       return left(new ReservationNotCreatedError());
     }
 

@@ -15,6 +15,10 @@ export class ListReservationUseCase {
   async execute(data: ListReservationInput): Promise<Response> {
     const { date, slotId, status, page, size } = data;
 
+    if (page <= 0 || size <= 0 || size > 500) {
+      return left(new ReservationError());
+    }
+
     try {
       const reservationData =
         await this.reservations.findReservedByFilterAndPaginated({

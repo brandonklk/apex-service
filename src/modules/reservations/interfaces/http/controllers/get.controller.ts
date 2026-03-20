@@ -1,4 +1,11 @@
-import { Controller, Get, HttpCode, HttpStatus, Param } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Inject,
+} from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiParam } from '@nestjs/swagger';
 
 import { ZodValidationPipe } from '../pipes/zod-validation.pipe';
@@ -8,10 +15,17 @@ import { HttpErrorMapper } from '../mappers/http-error.mapper';
 import { GetReservationPresenter } from '../presenters/get-reservation.presenter';
 import { GetReservationUseCase } from '@/modules/reservations/domain/reservation/application/use-cases/get-reservation.use-case';
 import { GetReservationResponse } from '../dtos/get-reservation.response';
+import {
+  LOGGER,
+  Logger,
+} from '@/modules/reservations/domain/reservation/application/logger/logger';
 
 @Controller('reservations')
 export class GetReservationController {
-  constructor(private useCase: GetReservationUseCase) {}
+  constructor(
+    private useCase: GetReservationUseCase,
+    @Inject(LOGGER) private logger: Logger,
+  ) {}
 
   @Get(':id')
   @HttpCode(HttpStatus.OK)

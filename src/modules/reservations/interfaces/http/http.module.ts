@@ -13,6 +13,8 @@ import { DeleteReservationUseCase } from '../../domain/reservation/application/u
 import { GetReservationUseCase } from '../../domain/reservation/application/use-cases/get-reservation.use-case';
 import { ListReservationUseCase } from '../../domain/reservation/application/use-cases/list-reservation.use-case';
 import { PrismaModule } from '../../infra/database/prisma/prisma.module';
+import { LOGGER } from '../../domain/reservation/application/logger/logger';
+import { NestLoggerService } from '../../infra/logger/nest-logger.service';
 
 @Module({
   imports: [PrismaModule],
@@ -31,6 +33,10 @@ import { PrismaModule } from '../../infra/database/prisma/prisma.module';
     DeleteReservationUseCase,
     GetReservationUseCase,
     ListReservationUseCase,
+    {
+      provide: LOGGER,
+      useClass: NestLoggerService,
+    },
   ],
 })
 export class HttpModule {}
